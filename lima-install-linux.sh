@@ -63,4 +63,27 @@ else
    echo "Lima already installed"
 fi
 
+# Create Ubuntu VM named ubuntu24 with template
+limactl create --yes --name=ubuntu24 template:ubuntu-lts --cpus 8
+if [ $? -ne 0 ]; then
+  echo "Failed to create VM 'ubuntu24'."
+  exit 1
+fi
+echo "VM 'ubuntu24' created successfully."
+
+# Edit and start the VM with nested virtualization enabled
+limactl edit ubuntu24 --start --set '.nestedVirtualization=true'
+if [ $? -ne 0 ]; then
+  echo "Failed to start and configure 'ubuntu24'."
+  exit 1
+fi
+echo "'ubuntu24' started with nested virtualization enabled."
+
+# Run ls -lta inside the VM
+limactl shell ubuntu24 ls -lta
+if [ $? -ne 0 ]; then
+  echo "Failed to run 'ls -lta' inside 'ubuntu24'."
+  exit 1
+fi
+echo "Command 'ls -lta' inside 'ubuntu24' executed successfully."
 
