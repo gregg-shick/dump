@@ -1,4 +1,5 @@
 #!/bin/bash
+is_ready=true
 
 if [[ "$1" == "aarch64" ]]; then
     echo "Architecture is aarch64"
@@ -18,8 +19,8 @@ fi
 #check for go
 go version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-	echo "Please install go - https://go.dev/doc/install.  Exiting.."
-	exit 1
+	echo "Please install go - https://go.dev/doc/install."
+	is_ready=false
 else
 	echo "Go installed."
 fi
@@ -27,28 +28,45 @@ fi
 #check for qemu
 qemu-system-$HOSTTYPE --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-	echo "Please install QEMU.  Exiting.."
-	exit 1
+	echo "Please install QEMU."
+	is_ready=false
 else
 	echo "QEMU installed."
 fi
  
+#check for build_essential
+make > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+	echo "Please install build-essential."
+	is_ready=false
+else
+	echo "build-essential installed."
+fi
+
+if $is_ready; then
+	echo "Required tools installed"
+else
+	echo "Missing required tools.  Exiting"
+	exit 1
+fi
 
 #install lima
 cd ~/
 limactl --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-   if [ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]; then
+   if [[ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]]; then
+	echo "I am in first if"
 	echo "Cloning lima into github.com directory"
 	cd $HOME/github.com
 	git clone https://github.com/lima-vm/lima.git
-   elif [ -d "$HOME/github.com" && -d "$HOME/github.com/lima" && -z "$(ls -A $HOME/github.com/lima)" ]; then
+   elif [[ -d "$HOME/github.com" && -d "$HOME/github.com/lima" && -z "$(ls "$HOME/github.com/lima")" ]]; then
+           echo "i am in elif"
 	   cd $HOME/github.com
-	   rm -r lima
+	   rm -rf lima
 	   git clone https://github.com/lima-vm/lima.git
 	   echo "Cloning lima into github.com directory"
-   else
-	echo "Creating github.com"
+   elif [[ ! -d "$HOME/github" ]]
+        echo "Creating github.com"
 	mkdir $HOME/github.com
 	cd $HOME/github.com
 	echo "Cloning lima into github.com directory"
