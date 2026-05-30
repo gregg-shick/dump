@@ -35,18 +35,23 @@ fi
  
 
 #install lima
-
+cd ~/
 limactl --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-   if [ -d "$HOME/github.com" ]; then
-	echo "Cloning lima into github.com folder"
+   if [ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]; then
+	echo "Cloning lima into github.com directory"
 	cd $HOME/github.com
 	git clone https://github.com/lima-vm/lima.git
+   elif [ -d "$HOME/github.com" && -d "$HOME/github.com/lima" && -z "$(ls -A $HOME/github.com/lima)" ]; then
+	   cd $HOME/github.com
+	   rm -r lima
+	   git clone https://github.com/lima-vm/lima.git
+	   echo "Cloning lima into github.com directory"
    else
 	echo "Creating github.com"
 	mkdir $HOME/github.com
 	cd $HOME/github.com
-	echo "Cloning lilma into github.com folder"
+	echo "Cloning lima into github.com directory"
  	git clone https://github.com/lima-vm/lima.git
    fi
    cd $HOME/github.com/lima
