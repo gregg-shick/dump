@@ -35,7 +35,7 @@ else
 fi
  
 #check for build_essential
-make > /dev/null 2>&1
+make --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 	echo "Please install build-essential."
 	is_ready=false
@@ -54,23 +54,24 @@ fi
 cd ~/
 limactl --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-   if [[ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]]; then
-	echo "I am in first if"
+   if [[ ! -d "$HOME/github" ]]; then
+        echo "first if"
+	echo "Creating github.com"
+	mkdir $HOME/github.com
+	cd $HOME/github.com
+	echo "Cloning lima into github.com directory"
+	git clone https://github.com/lima-vm/lima.git
+   elif [[ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]]; then
+	echo "I am in first elif"
 	echo "Cloning lima into github.com directory"
 	cd $HOME/github.com
 	git clone https://github.com/lima-vm/lima.git
    elif [[ -d "$HOME/github.com" && -d "$HOME/github.com/lima" && -z "$(ls "$HOME/github.com/lima")" ]]; then
-           echo "i am in elif"
-	   cd $HOME/github.com
-	   rm -rf lima
-	   git clone https://github.com/lima-vm/lima.git
-	   echo "Cloning lima into github.com directory"
-   elif [[ ! -d "$HOME/github" ]]
-        echo "Creating github.com"
-	mkdir $HOME/github.com
+        echo "second elif"
 	cd $HOME/github.com
+	rm -rf lima
+	git clone https://github.com/lima-vm/lima.git
 	echo "Cloning lima into github.com directory"
- 	git clone https://github.com/lima-vm/lima.git
    fi
    cd $HOME/github.com/lima
    make
