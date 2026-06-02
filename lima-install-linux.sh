@@ -43,12 +43,23 @@ else
 	echo "build-essential installed."
 fi
 
+#check for kvm
+#
+if [-d "/dev/kvm" ]; then
+	echo "KVM installed"
+else
+	echo "Please install KVM"
+	is_ready=false
+fi 
+
+
 if $is_ready; then
 	echo "Required tools installed"
 else
 	echo "Missing required tools.  Exiting"
 	exit 1
 fi
+
 
 #install lima
 cd ~/
