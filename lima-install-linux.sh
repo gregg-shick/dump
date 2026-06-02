@@ -66,26 +66,20 @@ cd ~/
 limactl --version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
    if [[ ! -d "$HOME/github.com" ]]; then
-        echo "first if"
 	echo "Creating github.com"
 	mkdir $HOME/github.com
 	cd $HOME/github.com
 	echo "Cloning lima into github.com directory"
 	git clone https://github.com/lima-vm/lima.git
-	read -p "enter"
    elif [[ -d "$HOME/github.com" && ! -d "$HOME/github.com/lima" ]]; then
-	echo "I am in first elif"
 	echo "Cloning liima into github.com directory"
 	cd $HOME/github.com
 	git clone https://github.com/lima-vm/lima.git
-	read -p "enter"
    elif [[ -d "$HOME/github.com" && -d "$HOME/github.com/lima" && -z "$(ls "$HOME/github.com/lima")" ]]; then
-        echo "second elif"
 	cd $HOME/github.com
 	rm -rf lima
 	echo "Cloning lima into github.com directory"
 	git clone https://github.com/lima-vm/lima.git
-	read -p "enter"
    fi
    cd $HOME/github.com/lima
    make
