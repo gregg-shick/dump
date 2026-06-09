@@ -8,4 +8,5 @@ cd linux
 git branch cix
 git checkout cix
 git am ../cix-linux-main/patches-7.0/*.patch
+cp ../cix-linux-main/config/config-7.0.defconfig .config
 make olddefconfig
